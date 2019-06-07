@@ -1,5 +1,6 @@
 const app = require('express')();
 const ApiServer = require('./apiServer');
+const DataGenerator = require('./dataGenerator');
 const config = require('./config.json');
 const uuid = require('uuidv4');
 const session = require('express-session');
@@ -53,6 +54,42 @@ app.get('/api/v4/*', async (req, res) => {
             // get the data using the token from the server side stored session 
             const result = await ApiServer.get(req._parsedOriginalUrl.path, req.session.clio_token.access_token);
             res.send(result.data);
+        } catch (e) {
+            console.log("Error:", e);
+            res.send("Error");
+        }
+    } else {
+        // no token hence NO FREAKING ACCESS !!!
+        res.send("Not Autorized");
+    }
+});
+
+app.get('/populate', async (req, res) => {
+    // check if we already stored a token in the session for this user
+    if (req.session.clio_token) {
+        console.log("/populate: ", req.sessionID);
+        try {
+            // get the data using the token from the server side stored session 
+            const result = await DataGenerator.run("create", req.session.clio_token.access_token);
+            res.send(result);
+        } catch (e) {
+            console.log("Error:", e);
+            res.send("Error");
+        }
+    } else {
+        // no token hence NO FREAKING ACCESS !!!
+        res.send("Not Autorized");
+    }
+});
+
+app.get('/destroy', async (req, res) => {
+    // check if we already stored a token in the session for this user
+    if (req.session.clio_token) {
+        console.log("/destroy: ", req.sessionID);
+        try {
+            // get the data using the token from the server side stored session 
+            const result = await DataGenerator.run("destroy", req.session.clio_token.access_token);
+            res.send(result);
         } catch (e) {
             console.log("Error:", e);
             res.send("Error");

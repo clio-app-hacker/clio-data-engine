@@ -1,21 +1,21 @@
 {
-  "name": "simpleo-auth-clio-server",
+  "name": "clio-datta-engine",
   "version": "1.0.0",
-  "description": "A simple OAuth server for clio manage",
+  "description": "A simple OAuth server for populating CLIO developer account with massive amounts of data",
   "scripts": {
     "start": "node ./src/server/proxyServer.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/clio-app-hacker/SimpleOAuth-Clio-Server.git"
+    "url": "git+https://github.com/clio-app-hacker/clio-data-engine.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/clio-app-hacker/SimpleOAuth-Clio-Server/issues"
+    "url": "https://github.com/clio-app-hacker/clio-data-engine/issues"
   },
-  "homepage": "https://github.com/clio-app-hacker/SimpleOAuth-Clio-Server#readme",
+  "homepage": "https://github.com/clio-app-hacker/clio-data-engine#readme",
   "dependencies": {
     "axios": "^0.18.1",
     "express": "^4.16.4",
