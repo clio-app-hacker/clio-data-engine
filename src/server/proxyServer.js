@@ -135,7 +135,7 @@ app.get('/oauth/response', async (req, res) => {
         console.log("/oauth/response Session: ", req.session);
 
         // redirect to the application done page
-        res.redirect(`http://localhost:3005/done`);
+        res.redirect(`http://localhost:${config.proxyPort}/done`);
 
     } catch (error) {
         console.log('Access Token Error', error);
