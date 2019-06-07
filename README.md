@@ -1,13 +1,17 @@
-# SimpleOAuth-Clio-Server
-A simple OAuth server for clio manage
+# Clio Data Engine
+A simple OAuth server for populating CLIO developer account with massive amounts of data
+
+Sample data is generated with Mockaroo. Schemas are in ./schemas folder and can be imported back into Mockaroo.
 
 ## Prerequisites/Tools
 
-nodeJS and yarn (though npm will work too)
+nodeJS and npm
 
 you can use either nvm or nodenv (prefered by clio) to set you nodeJS and npm versions
 
 ```
+MacOS exmaple:
+
 brew install nodenv
 nodenv -install 10.9.0
 nodenv global 10.9.0
@@ -22,8 +26,8 @@ Edit ./src/server/config.json and fill in the Client ID and Client Secrect (Or u
 You can get those from https://app.clio.com/nc/#/settings?path=settings%2Fdeveloper_applications
 
 ## Run
-1. yarn install (or `npm install`)
-2. yarn start (or `npm start`)
+1. npm install 
+2. npm start
 
 ## Test
 
@@ -31,17 +35,8 @@ http://localhost:3001/oauth will do the OAuth authentication
 
 If successful your Browser should have been redirected to http://localhost:3001/done and show "Setup done" in the Browser window.
 
-After that you can use `http://localhost:3001/api/v4/matters?fields=id,description,client{name,type}` to retrieve matters from the authorized account.
+After that you can use `http://localhost:3001/populate` to populate the authorized account.
 
-Try:
- * `http://localhost:3001/api/v4/contacts`
- * `http://localhost:3001/api/v4/activities`
- * `http://localhost:3001/api/v4/relationships`
- * `http://localhost:3001/api/v4/bills`
 
- You can also name specific fields (see https://app.clio.com/api/v4/documentation)
-
- * `http://localhost:3001/api/v4/calendars?fields=type,name,creator{name,account_owner,subscription_type}`
- * `http://localhost:3001/api/v4/communications?fields=type,subject,matter,user,senders{name,type}`
  
 
