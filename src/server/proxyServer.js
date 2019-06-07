@@ -39,6 +39,8 @@ app.use(session({
  * Done route - for testing mostly...
  */
 app.get('/done', async (req, res) => {
+    // since we changed the session (added token), we need to save it
+    req.session.save();
     res.send(`<pre>Setup done</pre>`);
 });
 
@@ -130,8 +132,6 @@ app.get('/oauth/response', async (req, res) => {
         // This makes sure we do not access data of another user !
         req.session.clio_token = result;
 
-        // since we changed the session (added token), we need to save it
-        req.session.save();
         console.log("/oauth/response Session: ", req.session);
 
         // redirect to the application done page

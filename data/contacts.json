@@ -1,1 +1,17 @@
-{}
+[
+    {
+        "first_name": "Jordain",
+        "last_name": "Empleton",
+        "type": "Person"
+    },
+    {
+        "first_name": "Aluino",
+        "last_name": "Morrill",
+        "type": "Person"
+    },
+    {
+        "first_name": "Guinna",
+        "last_name": "Tolumello",
+        "type": "Person"
+    }
+]

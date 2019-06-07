@@ -1,0 +1,6 @@
+[
+    {
+        "api": "/api/v4/contacts",
+        "fields": "id"
+    }
+]
