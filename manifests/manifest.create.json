@@ -1,7 +1,19 @@
 [
     {
+        "name": "contacts",
         "api": "/api/v4/contacts",
-        "fields": "id,type,name,first_name,middle_name,last_name,ledes_client_id,prefix,initials,payment_profile,phone_numbers{id,name,number,default_number},primary_email_address,email_addresses{id,address,name,default_email},web_sites{id,address,name}",
-        "data": "./data/contacts.json"
+        "data": "./data/Contacts.json",
+        "link": [
+            {
+                "name": "matters",
+                "source": "id",
+                "target": "client"
+            }
+        ]
+    },
+    {
+        "name": "matters",
+        "api": "/api/v4/matters",
+        "data": "./data/Matters.json"
     }
 ]
