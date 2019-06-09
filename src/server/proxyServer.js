@@ -133,6 +133,7 @@ app.get('/oauth/response', async (req, res) => {
         req.session.clio_token = result;
 
         console.log("/oauth/response Session: ", req.session);
+        req.session.save();
 
         // redirect to the application done page
         res.redirect(`http://localhost:${config.proxyPort}/done`);

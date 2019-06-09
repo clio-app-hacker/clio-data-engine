@@ -18,25 +18,56 @@ function readAll() {
 }
 
 function updatefields(source, type, sourceData, target, targetList, data) {
-    console.log("updatefields", source, sourceData, target)
+    //console.log("updatefields", source, sourceData, target)
     const sourceValue = sourceData[source];
     // find the target in the target list where the value of target is equal to sourceValue
     const selectedObject = targetList.find((obj) => {
-        console.log("Comparing :" + obj[target] + " with" + sourceValue);
+        //console.log("Comparing :" + obj[target] + " with" + sourceValue);
         return obj[target] === sourceValue;
     });
     // update object if found
     if (selectedObject) {
         // lin type can field or object
-        if(type === "field"){
+        if (type === "field") {
             // assign only the field value
             selectedObject[target] = data[source];
         } else {
-            // assign the entire object
-           selectedObject[target] = data;
+            // assignvi  the entire object
+            selectedObject[target] = data;
         }
         console.log("SelectedObject:", selectedObject);
     }
+}
+function process(start, maxLength, secondsDelay, map, store, instance, token){
+    processChunk(start, maxLength, secondsDelay, map, store, instance, token);
+}
+
+async function processChunk(start, maxLength, secondsDelay, map, store, instance, token) {
+    let end = start + maxLength;
+    end = end < store.length ? store.length : end;
+    const { api: url, link } = instance;
+    for (let d = start; d < end; d++) {
+        const data = store[d];
+        try {
+            const response = await ApiServer.post(url, { data: data }, token);
+            //console.log("posted", data);
+            console.log("Response", response.data.data)
+            if (link && link.length > 0) {
+                const { source, target, name, type} = link[0];
+                updatefields(source, type, data, target, map[name].store, response.data.data);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    if (end < store.length) {
+        setTimeout(process, secondsDelay*1000, end + 1, maxLength, secondsDelay, map, store, instance, token);
+    }
+}
+
+function processChunks(maxLength, secondsDelay, map, store, instance, token) {
+    setTimeout(process, secondsDelay*1000, 0, maxLength, secondsDelay, map, store, instance, token);
 }
 
 async function create(token) {
@@ -46,21 +77,23 @@ async function create(token) {
     // read data files
     for (let key in map) {
         const instance = map[key].instance
-        const { api: url } = instance;
-        const dataStore = map[key].store
-        console.log("Data File content-> ", dataStore);
+        const store = map[key].store
+        const { api: url, link } = instance;
 
-        // TODO: run 50 at a time then pause for 45 secs to avoid rate limiting
-        for (let d = 0; d < dataStore.length; d++) {
-            const data = dataStore[d];
+        // console.log("Data File content-> ", dataStore);
+
+        // TODO: run 10 at a time then pause for 45 secs to avoid rate limiting
+        // processChunks(5, 45, map, store, instance, token);
+
+        for (let d = 0; d < store.length; d++) {
+            const data = store[d];
             try {
                 const response = await ApiServer.post(url, { data: data }, token);
                 //console.log("posted", data);
                 console.log("Response", response.data.data)
-                const { link } = instance;
                 if (link && link.length > 0) {
-                    const { source, target, name } = link[0];
-                    updatefields(source, data, target, map[name].store, response.data.data);
+                    const { source, target, name, type } = link[0];
+                    updatefields(source, type, data, target, map[name].store, response.data.data);
                 }
             } catch (e) {
                 console.log(e);
