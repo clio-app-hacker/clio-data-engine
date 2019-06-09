@@ -1,0 +1,1 @@
+### Schemas usable with mockaroo.com

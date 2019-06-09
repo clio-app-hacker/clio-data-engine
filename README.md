@@ -35,7 +35,22 @@ http://localhost:3001/oauth will do the OAuth authentication
 
 If successful your Browser should have been redirected to http://localhost:3001/done and show "Setup done" in the Browser window.
 
+Users have to be created manually
+ - https://www.mailinator.com has a public inbox which allows you to add users from CLIO Manage using <name>@mailinator.com as the email to use for inviting someone.
+
+  You will need to folloing users if you use the datasets in this repo
+
+   - Frank Hallet
+   - Dave Stiller
+   - Eugene Mars
+   - Hickup Haddock
+   - Astrid Hofferson
+   - Snotlout Jorgenson
+   - Spitelout Jorgenson
+   - Stoick Haddock
+
 After that you can use `http://localhost:3001/populate` to populate the authorized account.
+
 
 
  
