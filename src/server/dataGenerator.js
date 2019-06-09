@@ -17,7 +17,7 @@ function readAll() {
     return dataMap;
 }
 
-function updatefields(source, sourceData, target, targetList, data) {
+function updatefields(source, type, sourceData, target, targetList, data) {
     console.log("updatefields", source, sourceData, target)
     const sourceValue = sourceData[source];
     // find the target in the target list where the value of target is equal to sourceValue
@@ -27,7 +27,14 @@ function updatefields(source, sourceData, target, targetList, data) {
     });
     // update object if found
     if (selectedObject) {
-        selectedObject[target] = data;
+        // lin type can field or object
+        if(type === "field"){
+            // assign only the field value
+            selectedObject[target] = data[source];
+        } else {
+            // assign the entire object
+           selectedObject[target] = data;
+        }
         console.log("SelectedObject:", selectedObject);
     }
 }
