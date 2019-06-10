@@ -133,10 +133,12 @@ app.get('/oauth/response', async (req, res) => {
         req.session.clio_token = result;
 
         console.log("/oauth/response Session: ", req.session);
-        req.session.save();
 
-        // redirect to the application done page
-        res.redirect(`http://localhost:${config.proxyPort}/done`);
+        // async save function -> requires callback or data may not be saved when redirected
+        req.session.save(() => {
+            // redirect to the application done page
+            res.redirect(`http://localhost:${config.proxyPort}/done`);
+        });
 
     } catch (error) {
         console.log('Access Token Error', error);

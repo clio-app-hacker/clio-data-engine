@@ -2,7 +2,7 @@
     {
         "name": "contacts",
         "api": "/api/v4/contacts",
-        "data": "./data/Contacts.json",
+        "data": "./data-large/Contacts.json",
         "link": [
             {
                 "name": "matters",
@@ -15,6 +15,6 @@
     {
         "name": "matters",
         "api": "/api/v4/matters",
-        "data": "./data/Matters.json"
+        "data": "./data-large/Matters.json"
     }
 ]

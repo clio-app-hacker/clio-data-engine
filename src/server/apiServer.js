@@ -13,15 +13,16 @@ const ApiServer = {
     },
     post: async (url, data, token) => {
         console.log(`${url} with token = ${token}`)
+        const baseURL = config.apiHost;
         const axiosConfig = {
-            baseURL: config.apiHost,
+            baseURL,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         };
 
-        console.log("POST:", data, axiosConfig)
+        // console.log("POST:", data, axiosConfig)
         let result = await axios.post(url, data, axiosConfig);
         return result;
     },

@@ -1,6 +1,21 @@
 const fs = require('fs');
 const ApiServer = require('./apiServer');
 
+/**
+ * Blocking sleep function
+ * 
+ * This is used to wait for rate limit timeout to expire
+ */
+function sleep(miliseconds) {
+    var currentTime = new Date().getTime();
+    while (currentTime + miliseconds >= new Date().getTime()) {
+    }
+}
+
+/**
+ * Read all fake data into a map. This is need so we can build relationship links as
+ * ID's become available when we store the data in CLIO. 
+ */
 function readAll() {
     console.log("DataGenerator.readAll");
     let manifest = JSON.parse(fs.readFileSync('./manifests/manifest.create.json'));
@@ -17,98 +32,74 @@ function readAll() {
     return dataMap;
 }
 
-function updatefields(source, type, sourceData, target, targetList, data) {
+function updatefields(source, linkType, sourceData, target, store, data) {
     //console.log("updatefields", source, sourceData, target)
     const sourceValue = sourceData[source];
-    // find the target in the target list where the value of target is equal to sourceValue
-    const selectedObject = targetList.find((obj) => {
+    // find the target in the store where the value of target is equal to sourceValue
+    const selectedObject = store.find((obj) => {
         //console.log("Comparing :" + obj[target] + " with" + sourceValue);
         return obj[target] === sourceValue;
     });
-    // update object if found
+    // update object link if found
     if (selectedObject) {
-        // lin type can field or object
-        if (type === "field") {
+        // linkType can field or object
+        if (linkType === "field") {
             // assign only the field value
             selectedObject[target] = data[source];
         } else {
             // assignvi  the entire object
             selectedObject[target] = data;
         }
-        console.log("SelectedObject:", selectedObject);
+        //console.log("SelectedObject:", selectedObject);
     }
+    return store;
 }
 
-
-async function processChunk(start, maxLength, secondsDelay, map, key, token) {
-    console.log("processChunk: " + start);
+/**
+ * Process a chunk of data
+ * @param {*} map the entire fake data map
+ * @param {*} key the key for the current data
+ * @param {*} token the clio token
+ */
+async function processData(map, key, token) {
+    console.log("-----------------------------------------" + key + " processData");
     const store = map[key].store
+    console.log(key + "Store length: " + store.length)
     const instance = map[key].instance
     const { api: url, link } = instance;
-    let end = start + maxLength;
-    end = end < store.length ? end : store.length;
 
-    for (let d = start; d < end; d++) {
+    for (let d = 0; d < store.length; d++) {
         const data = store[d];
         try {
             const response = await ApiServer.post(url, { data: data }, token);
             //console.log("posted", data);
-            console.log("Response", response.data.data)
+            //console.log("Response", response.data.data)
             if (link && link.length > 0) {
                 const { source, target, name, type } = link[0];
-                updatefields(source, type, data, target, map[name].store, response.data.data);
+                map[name].store = updatefields(source, type, data, target, map[name].store, response.data.data);
             }
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            console.log("posted", data);
+            console.log("-------------------------------------\n\n\n", error.response.data.error, "\n-------------------------------------\n\n");
+            if (error.response.data.error.type == 'RateLimited') {
+                // keep retrying
+                d--;
+                // wait until timeout is over - blocking which is ok
+                sleep(error.response.headers['retry-after'] * 1005);
+            }
         }
     }
-
-    if (end < store.length) {
-        setTimeout(processNext, secondsDelay * 1000, end + 1, maxLength, secondsDelay, map, key, token);
-    }
+    return true;
 }
 
-function processNext(start, maxLength, secondsDelay, map, key, token){
-    processChunk(start, maxLength, secondsDelay, map, key, token);
-}
-
-function processChunks(maxLength, secondsDelay, map, key, token) {
-    console.log("processChunks...");
-    setTimeout(processNext, 0, 0, maxLength, secondsDelay, map, key, token);
-}
 
 async function create(token) {
     console.log("DataGenerator.create");
     const map = readAll();
-
     // read data files
     for (let key in map) {
-        const instance = map[key].instance
-        const store = map[key].store
-        const { api: url, link } = instance;
-
-        // console.log("Data File content-> ", dataStore);
-
-        // WIP: run 5 at a time then pause for 45 secs to avoid rate limiting
-        processChunks(5, 5, map, key, token);
-
-        // for (let d = 0; d < store.length; d++) {
-        //     const data = store[d];
-        //     try {
-        //         const response = await ApiServer.post(url, { data: data }, token);
-        //         //console.log("posted", data);
-        //         console.log("Response", response.data.data)
-        //         if (link && link.length > 0) {
-        //             const { source, target, name, type } = link[0];
-        //             updatefields(source, type, data, target, map[name].store, response.data.data);
-        //         }
-        //     } catch (e) {
-        //         console.log(e);
-        //     }
-        // }
+        await processData(map, key, token)
     }
-    // create data as specified in manifest
-
 }
 
 function destroy(token) {
