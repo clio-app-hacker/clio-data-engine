@@ -84,7 +84,7 @@ async function processData(map, key, token) {
             if (error.response.data.error.type == 'RateLimited') {
                 // keep retrying
                 d--;
-                // wait until timeout is over - blocking which is ok
+                // wait until rate limit timeout is over - blocking in this case which is ok
                 sleep(error.response.headers['retry-after'] * 1005);
             }
         }
