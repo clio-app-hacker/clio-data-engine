@@ -55,11 +55,40 @@ function updatefields(source, linkType, sourceData, target, store, data) {
     return store;
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+// TODO handle loop same way as proceesItem L140
+async function attachItems(attach, attachObj, map, key, token) {
+    const instance = map[attach.name].instance;
+    const store = map[attach.name].store;
+    const { api: url } = instance;
+    const numItems = getRandomInt(attach.min, attach.max)
+    console.log("Creating " + numItems + " items for " + attachObj.display_number);
+    for (let index = 0; index < numItems; index++) {
+        try {
+            let dataItem = store[index];
+            dataItem[attach.target] = attachObj;
+            await ApiServer.post(url, { data: dataItem }, token);
+        } catch (error) {
+            console.log("posted", dataItem);
+            console.log("-------------------------------------\n\n\n", error.response.data.error, "\n-------------------------------------\n\n");
+            if (error.response.data.error.type == 'RateLimited') {
+                // keep retrying
+                index--;
+                // wait until rate limit timeout is over - blocking in this case which is ok
+                sleep(error.response.headers['retry-after'] * 1005);
+            }
+        }
+    }
+}
+
 async function processItem(index, map, key, token) {
     const store = map[key].store;
     const dataItem = store[index];
     const instance = map[key].instance
-    const { api: url, link } = instance;
+    const { api: url, link, attach } = instance;
     try {
         const response = await ApiServer.post(url, { data: dataItem }, token);
         //console.log("posted", dataItem);
@@ -68,14 +97,29 @@ async function processItem(index, map, key, token) {
             const { source, target, name, type } = link;
             map[name].store = updatefields(source, type, dataItem, target, map[name].store, response.data.data);
         }
+        if (attach) {
+            await attachItems(attach, response.data.data, map, key, token);
+        }
     } catch (error) {
         console.log("posted", dataItem);
-        console.log("-------------------------------------\n\n\n", error.response.data.error, "\n-------------------------------------\n\n");
-        if (error.response.data.error.type == 'RateLimited') {
-            // keep retrying
-            index--;
-            // wait until rate limit timeout is over - blocking in this case which is ok
-            sleep(error.response.headers['retry-after'] * 1005);
+        // TODO: Handle error function
+        if (error && error.response && error.response.data) {
+
+            console.log("-------------------------------------\n\n\n", error.response.data.error, "\n-------------------------------------\n\n");
+            if (error.response.data.error.type == 'RateLimited') {
+                // keep retrying
+                index--;
+                // wait until rate limit timeout is over - blocking in this case which is ok
+                sleep(error.response.headers['retry-after'] * 1005);
+
+            } else {
+                console.log("---------------not rate limited----------------------\n\n\n", error.response.data.error);
+            }
+        } else if (error && error.response) {
+            console.log("-----------no data--------------------------\n\n\n", error.response);
+
+        } else {
+            console.log("-------------no response------------------------\n\n\n", error);
         }
     }
     return index;
@@ -92,8 +136,8 @@ async function processData(map, key, token) {
     const store = map[key].store
     console.log(" - \"" + key + "\" - Store length: " + store.length)
     for (let index = 0; index < store.length; index++) {
-        index = await processItem(index, map, key, token);
 
+        index = await processItem(index, map, key, token);
     }
     return true;
 }

@@ -19,6 +19,12 @@
     {
         "name": "matters",
         "api": "/api/v4/matters",
-        "data": "./data/Matters.json"
+        "data": "./data/Matters.json",
+        "attach": {
+            "name": "activities",
+            "target": "matter",
+            "min": 0,
+            "max": 10
+        }
     }
 ]
