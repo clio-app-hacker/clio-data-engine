@@ -1,0 +1,10 @@
+[{"id":1,"type":"TimeEntry","quantity_in_hours":73,"note":"ddimberline0@home.pl","flat_rate":true},
+{"id":2,"type":"TimeEntry","quantity_in_hours":16,"note":"rnuscha1@hubpages.com","flat_rate":false},
+{"id":3,"type":"TimeEntry","quantity_in_hours":68,"note":"gbruntjen2@ebay.co.uk","flat_rate":false},
+{"id":4,"type":"TimeEntry","quantity_in_hours":29,"note":"ksculpher3@trellian.com","flat_rate":true},
+{"id":5,"type":"TimeEntry","quantity_in_hours":17,"note":"bmosten4@goo.ne.jp","flat_rate":true},
+{"id":6,"type":"TimeEntry","quantity_in_hours":11,"note":"semanuelli5@blinklist.com","flat_rate":false},
+{"id":7,"type":"TimeEntry","quantity_in_hours":78,"note":"smillott6@uiuc.edu","flat_rate":false},
+{"id":8,"type":"TimeEntry","quantity_in_hours":50,"note":"jbarkaway7@mysql.com","flat_rate":false},
+{"id":9,"type":"TimeEntry","quantity_in_hours":79,"note":"rwillas8@163.com","flat_rate":true},
+{"id":10,"type":"TimeEntry","quantity_in_hours":64,"note":"lgreensides9@jugem.jp","flat_rate":true}]

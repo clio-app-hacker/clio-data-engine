@@ -3,14 +3,18 @@
         "name": "contacts",
         "api": "/api/v4/contacts",
         "data": "./data/Contacts.json",
-        "link": [
-            {
-                "name": "matters",
-                "source": "id",
-                "type": "object",
-                "target": "client"
-            }
-        ]
+        "link": {
+            "name": "matters",
+            "source": "id",
+            "type": "object",
+            "target": "client"
+        }
+    },
+    {
+        "name": "activities",
+        "api": "/api/v4/activities",
+        "data": "./data/Activities.json",
+        "ignore": true
     },
     {
         "name": "matters",

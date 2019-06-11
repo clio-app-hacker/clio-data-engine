@@ -55,6 +55,32 @@ function updatefields(source, linkType, sourceData, target, store, data) {
     return store;
 }
 
+async function processItem(index, map, key, token) {
+    const store = map[key].store;
+    const dataItem = store[index];
+    const instance = map[key].instance
+    const { api: url, link } = instance;
+    try {
+        const response = await ApiServer.post(url, { data: dataItem }, token);
+        //console.log("posted", dataItem);
+        //console.log("Response", response.data.data)
+        if (link) {
+            const { source, target, name, type } = link;
+            map[name].store = updatefields(source, type, dataItem, target, map[name].store, response.data.data);
+        }
+    } catch (error) {
+        console.log("posted", dataItem);
+        console.log("-------------------------------------\n\n\n", error.response.data.error, "\n-------------------------------------\n\n");
+        if (error.response.data.error.type == 'RateLimited') {
+            // keep retrying
+            index--;
+            // wait until rate limit timeout is over - blocking in this case which is ok
+            sleep(error.response.headers['retry-after'] * 1005);
+        }
+    }
+    return index;
+}
+
 /**
  * Process a chunk of data
  * @param {*} map the entire fake data map
@@ -62,32 +88,12 @@ function updatefields(source, linkType, sourceData, target, store, data) {
  * @param {*} token the clio token
  */
 async function processData(map, key, token) {
-    console.log("-----------------------------------------" + key + " processData");
+    console.log("----------------------------------------- for \"" + key + "\" processData");
     const store = map[key].store
-    console.log(key + "Store length: " + store.length)
-    const instance = map[key].instance
-    const { api: url, link } = instance;
+    console.log(" - \"" + key + "\" - Store length: " + store.length)
+    for (let index = 0; index < store.length; index++) {
+        index = await processItem(index, map, key, token);
 
-    for (let d = 0; d < store.length; d++) {
-        const data = store[d];
-        try {
-            const response = await ApiServer.post(url, { data: data }, token);
-            //console.log("posted", data);
-            //console.log("Response", response.data.data)
-            if (link && link.length > 0) {
-                const { source, target, name, type } = link[0];
-                map[name].store = updatefields(source, type, data, target, map[name].store, response.data.data);
-            }
-        } catch (error) {
-            console.log("posted", data);
-            console.log("-------------------------------------\n\n\n", error.response.data.error, "\n-------------------------------------\n\n");
-            if (error.response.data.error.type == 'RateLimited') {
-                // keep retrying
-                d--;
-                // wait until rate limit timeout is over - blocking in this case which is ok
-                sleep(error.response.headers['retry-after'] * 1005);
-            }
-        }
     }
     return true;
 }
@@ -98,7 +104,9 @@ async function create(token) {
     const map = readAll();
     // read data files
     for (let key in map) {
-        await processData(map, key, token)
+        if (!map[key].instance.ignore) {
+            await processData(map, key, token)
+        }
     }
 }
 
