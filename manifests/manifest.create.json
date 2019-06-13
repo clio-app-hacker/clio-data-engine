@@ -3,6 +3,7 @@
         "name": "contacts",
         "api": "/api/v4/contacts",
         "data": "./data/Contacts.json",
+        "create": true,
         "link": {
             "name": "matters",
             "source": "id",
@@ -14,17 +15,24 @@
         "name": "activities",
         "api": "/api/v4/activities",
         "data": "./data/Activities.json",
-        "ignore": true
+        "create": false
     },
     {
         "name": "matters",
         "api": "/api/v4/matters",
         "data": "./data/Matters.json",
+        "create": true,
         "attach": {
             "name": "activities",
             "target": "matter",
             "min": 0,
             "max": 10
         }
+    },
+    {
+        "name": "users",
+        "api": "/api/v4/users",
+        "data": "./data/Users.json",
+        "create": false
     }
 ]

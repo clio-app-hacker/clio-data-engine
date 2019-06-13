@@ -6,6 +6,10 @@ const uuid = require('uuidv4');
 const session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
+const getTokenForUser = () => {
+    return "";
+}
+
 /**
  * use express to handle incomming request
  * use simple-oauth2 for oauth
@@ -39,9 +43,8 @@ app.use(session({
  * Done route - for testing mostly...
  */
 app.get('/done', async (req, res) => {
-    // since we changed the session (added token), we need to save it
-    req.session.save();
-    res.send(`<pre>Setup done</pre>`);
+    res.send(`<a href="${config.tokenHost}/logout">Logout from Clio</a>`);
+
 });
 
 /**
@@ -72,7 +75,7 @@ app.get('/populate', async (req, res) => {
         console.log("/populate: ", req.sessionID);
         try {
             // get the data using the token from the server side stored session 
-            const result = await DataGenerator.run("create", req.session.clio_token.access_token);
+            const result = await DataGenerator.run("create", req.session.clio_token.access_token, req.params.name);
             res.send(result);
         } catch (e) {
             console.log("Error:", e);

@@ -148,7 +148,7 @@ async function create(token) {
     const map = readAll();
     // read data files
     for (let key in map) {
-        if (!map[key].instance.ignore) {
+        if (map[key].instance.create) {
             await processData(map, key, token)
         }
     }
