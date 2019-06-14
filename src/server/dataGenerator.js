@@ -47,7 +47,7 @@ function updatefields(source, linkType, sourceData, target, store, data) {
             // assign only the field value
             selectedObject[target] = data[source];
         } else {
-            // assignvi  the entire object
+            // assign the entire object
             selectedObject[target] = data;
         }
         //console.log("SelectedObject:", selectedObject);
@@ -67,8 +67,9 @@ async function attachItems(attach, attachObj, map, key, token) {
     const numItems = getRandomInt(attach.min, attach.max)
     console.log("Creating " + numItems + " items for " + attachObj.display_number);
     for (let index = 0; index < numItems; index++) {
+        let dataItem = store[index];
+        dataItem.user = attachObj.responsible_attorney;
         try {
-            let dataItem = store[index];
             dataItem[attach.target] = attachObj;
             await ApiServer.post(url, { data: dataItem }, token);
         } catch (error) {
@@ -98,7 +99,9 @@ async function processItem(index, map, key, token) {
             map[name].store = updatefields(source, type, dataItem, target, map[name].store, response.data.data);
         }
         if (attach) {
-            await attachItems(attach, response.data.data, map, key, token);
+            const responseData = response.data.data;
+            const mergedData = { ...dataItem, ...responseData };
+            await attachItems(attach, mergedData, map, key, token);
         }
     } catch (error) {
         console.log("posted", dataItem);

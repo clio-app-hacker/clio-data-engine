@@ -1,0 +1,122 @@
+[
+    {
+        "id": 348322951,
+        "name": "Olaf Becker",
+        "account_owner": true,
+        "email": "obecker1154@gmail.com",
+        "enabled": true,
+        "phone_number": "",
+        "rate": 800,
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "id": 348340081,
+        "name": "Dave Stiller",
+        "account_owner": false,
+        "email": "mostlybaldeagle@gmail.com",
+        "enabled": true,
+        "phone_number": "",
+        "rate": 350,
+        "roles": [
+            "accounts",
+            "billing",
+            "reports"
+        ]
+    },
+    {
+        "id": 348342211,
+        "name": "Frank Hallet",
+        "account_owner": false,
+        "email": "frank.hallet@mailinator.com",
+        "enabled": true,
+        "phone_number": "678899000",
+        "rate": 500,
+        "roles": [
+            "accounts",
+            "billing",
+            "reports"
+        ]
+    },
+    {
+        "id": 348348136,
+        "name": "Hickup Haddock",
+        "account_owner": false,
+        "email": "hickup.haddock@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348151,
+        "name": "Eugene Mars",
+        "account_owner": false,
+        "email": "eugene.mars@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348166,
+        "name": "Astrid Hofferson",
+        "account_owner": false,
+        "email": "astrid.hofferson@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348181,
+        "name": "Snotlout Jorgenson",
+        "account_owner": false,
+        "email": "snotlout.jorgenson@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348196,
+        "name": "Spitelout Jorgenson",
+        "account_owner": false,
+        "email": "spitelout.jorgenson@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348211,
+        "name": "Stoick Haddock",
+        "account_owner": false,
+        "email": "stoick.haddock@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348841,
+        "name": "Viggo Grimson",
+        "account_owner": false,
+        "email": "viggo.grimson@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    },
+    {
+        "id": 348348856,
+        "name": "Ryker Grimson",
+        "account_owner": false,
+        "email": "ryker.grimson@mailinator.com",
+        "enabled": true,
+        "phone_number": null,
+        "rate": 0,
+        "roles": []
+    }
+]
