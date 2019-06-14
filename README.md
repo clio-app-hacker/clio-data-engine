@@ -40,6 +40,7 @@ Users have to be created manually
 
   You will need to folloing users if you use the datasets in this repo
 
+   - <yourself>
    - Frank Hallet
    - Dave Stiller
    - Eugene Mars
@@ -48,6 +49,9 @@ Users have to be created manually
    - Snotlout Jorgenson
    - Spitelout Jorgenson
    - Stoick Haddock
+
+Use Postman to retrieve the users and replace ./data/Users.json, this is needed as the Ids are different
+for everyone.
 
 After that you can use `http://localhost:3001/populate` to populate the authorized account.
 
