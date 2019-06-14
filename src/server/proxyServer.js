@@ -6,10 +6,6 @@ const uuid = require('uuidv4');
 const session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
-const getTokenForUser = () => {
-    return "";
-}
-
 /**
  * use express to handle incomming request
  * use simple-oauth2 for oauth
@@ -27,6 +23,7 @@ const credentials = {
 
 // create oauth instance using credentials
 const oauth2 = require('simple-oauth2').create(credentials);
+DataGenerator.oauth = oauth2;
 
 // add & configure session middleware
 app.use(session({
@@ -75,7 +72,7 @@ app.get('/populate', async (req, res) => {
         console.log("/populate: ", req.sessionID);
         try {
             // get the data using the token from the server side stored session 
-            const result = await DataGenerator.run("create", req.session.clio_token.access_token, req.params.name);
+            const result = await DataGenerator.run("create", req.session);
             res.send(result);
         } catch (e) {
             console.log("Error:", e);
@@ -93,7 +90,7 @@ app.get('/destroy', async (req, res) => {
         console.log("/destroy: ", req.sessionID);
         try {
             // get the data using the token from the server side stored session 
-            const result = await DataGenerator.run("destroy", req.session.clio_token.access_token);
+            const result = await DataGenerator.run("destroy", req.session);
             res.send(result);
         } catch (e) {
             console.log("Error:", e);
